@@ -1,6 +1,6 @@
-package br.com.dtfoods.activity;
+package br.com.dtfoods.ui.activity;
 
-import static br.com.dtfoods.activity.ConstantesActivities.CHAVE_ALUNO;
+import static br.com.dtfoods.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,13 +20,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import br.com.dtfoods.R;
 import br.com.dtfoods.dao.AlunoDAO;
 import br.com.dtfoods.model.Aluno;
+import br.com.dtfoods.ui.adapter.ListaAlunosAdapter;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
    public static final String TITULO_APPBAR = "Lista de alunos";
    public static final String TAG = "ListaAlunosActivity";
    private final AlunoDAO alunoDAO = new AlunoDAO();
-   private ArrayAdapter<Aluno> adapter;
+   private ListaAlunosAdapter adapter;
 
    @Override
    protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,12 +36,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
       setTitle(TITULO_APPBAR);
       configuraFabNovoAluno();
       configuraLista();
-
-//      StringBuilder nomeAluno = new StringBuilder("Aluno ");
-//      for (int i = 0; i < 20; i++) {
-//         alunoDAO.salvar(new Aluno(nomeAluno.toString(), "(11)99938-7391", "thiago.garcia@dtfoods.com.br"));
-//         nomeAluno.append(i);
-//      }
 
       alunoDAO.limpar();
       alunoDAO.salvar(new Aluno("Thiago Garcia", "(11)99938-7391", "thiago.garcia@dtfoods.com.br"));
@@ -53,14 +46,12 @@ public class ListaAlunosActivity extends AppCompatActivity {
    @Override
    protected void onResume() {
       super.onResume();
-      adapter.clear();
-      adapter.addAll(alunoDAO.todos());
+      adapter.atualiza(alunoDAO.todos());
    }
 
    @Override
    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
-//      menu.add("Remover");
       getMenuInflater().inflate(R.menu.activity_lista_alunos_menu, menu);
    }
 
@@ -72,7 +63,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
          Aluno aluno = adapter.getItem(menuInfo.position);
          remover(aluno);
       }
-
       return super.onContextItemSelected(item);
    }
 
@@ -94,24 +84,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
       ListView listaAlunos = findViewById(R.id.activity_lista_alunos_listview);
       configuraAdapter(listaAlunos);
       configuraListenerDeCliquePorItem(listaAlunos);
-//      configuraListenerDeCliqueLongoPorItem(listaAlunos);
       registerForContextMenu(listaAlunos);
    }
-
-//   private void configuraListenerDeCliqueLongoPorItem(ListView listaAlunos) {
-//      listaAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//         @Override
-//         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int posicao, long id) {
-//            Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(posicao);
-//            if (alunoEscolhido != null) {
-//               remover(alunoEscolhido);
-//            } else {
-//               Toast.makeText(ListaAlunosActivity.this, "Aluno inválido.", Toast.LENGTH_SHORT).show();
-//            }
-//            return false;
-//         }
-//      });
-//   }
 
    private void remover(Aluno aluno) {
       alunoDAO.remover(aluno);
@@ -139,7 +113,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
    }
 
    private void configuraAdapter(@NonNull ListView listaAlunos) {
-      adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+      adapter = new ListaAlunosAdapter(this);
       listaAlunos.setAdapter(adapter);
    }
 }

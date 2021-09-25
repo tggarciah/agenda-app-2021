@@ -1,13 +1,11 @@
-package br.com.dtfoods.activity;
+package br.com.dtfoods.ui.activity;
 
-import static br.com.dtfoods.activity.ConstantesActivities.CHAVE_ALUNO;
+import static br.com.dtfoods.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;

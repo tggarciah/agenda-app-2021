@@ -1,4 +1,4 @@
-package br.com.dtfoods.activity;
+package br.com.dtfoods.ui.activity;
 
 public interface ConstantesActivities {
    String CHAVE_ALUNO = "aluno";
