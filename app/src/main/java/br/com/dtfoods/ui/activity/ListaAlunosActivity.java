@@ -2,6 +2,7 @@ package br.com.dtfoods.ui.activity;
 
 import static br.com.dtfoods.ui.activity.ConstantesActivities.CHAVE_ALUNO;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,11 +57,30 @@ public class ListaAlunosActivity extends AppCompatActivity {
    public boolean onContextItemSelected(@NonNull MenuItem item) {
       int itemId = item.getItemId();
       if (itemId == R.id.activity_lista_alunos_menu_remover) {
-         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-         Aluno aluno = adapter.getItem(menuInfo.position);
-         remover(aluno);
+         confirmarRemocaoAluno(item);
       }
       return super.onContextItemSelected(item);
+   }
+
+   private void confirmarRemocaoAluno(@NonNull final MenuItem item) {
+      new AlertDialog.Builder(this)
+              .setTitle("Removendo o aluno")
+              .setMessage("Tem certeza que quer remover o aluno?")
+              .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                 @Override
+                 public void onClick(DialogInterface dialogInterface, int i) {
+                    AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                    Aluno aluno = adapter.getItem(menuInfo.position);
+                    remover(aluno);
+                 }
+              })
+              .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                 @Override
+                 public void onClick(DialogInterface dialogInterface, int i) {
+                    Toast.makeText(ListaAlunosActivity.this, "Obrigado por não me remover! :)", Toast.LENGTH_LONG).show();
+                 }
+              })
+              .show();
    }
 
    private void configuraFabNovoAluno() {
