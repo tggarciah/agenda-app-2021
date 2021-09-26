@@ -51,8 +51,4 @@ public class AlunoDAO {
          alunos.remove(alunoDevolvido);
       }
    }
-
-   public void limpar() {
-      alunos.clear();
-   }
 }
